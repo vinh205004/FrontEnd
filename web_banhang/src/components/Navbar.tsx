@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getCategories } from "../services/categoryService";
 import type { Category } from "../services/categoryService";
 
 const Navbar: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [hovered, setHovered] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getCategories().then(setCategories);
@@ -20,6 +21,7 @@ const Navbar: React.FC = () => {
             className="cursor-pointer flex-1 px-4 h-full flex items-center justify-center rounded hover:bg-white hover:text-[#3c474c]"
             onMouseEnter={() => setHovered(cat.slug)}
             onMouseLeave={() => setHovered(null)}
+            onClick={() => navigate(`/${cat.slug}`)}
           >
             <span className="block">{cat.name}</span>
 
@@ -34,7 +36,13 @@ const Navbar: React.FC = () => {
                   <ul className="space-y-2">
                     {cat.subCategories.map((sub) => (
                       <li key={sub.id}>
-                        <Link to={`/${cat.slug}/${sub.slug}`} className="hover:text-red-500">
+                        <Link 
+                          to={`/${cat.slug}/${sub.slug}`} 
+                          className="hover:text-red-500"
+                          onClick={(e) => {
+                          e.stopPropagation();
+                          setHovered(null);
+                        }}> 
                           {sub.name}
                         </Link>
                       </li>

@@ -11,7 +11,7 @@ export interface Category {
   subCategories: SubCategory[];
 }
 
-// Mock data (sau này chỉ cần fetch API thay thế)
+// Mock data 
 export const getCategories = async (): Promise<Category[]> => {
   return [
     {
