@@ -1,8 +1,9 @@
 import { useRef } from "react";
 import Slider from "react-slick";
-import { ShoppingBag, User, Store, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { ShoppingBag, User, Store, ChevronLeft, ChevronRight } from "lucide-react";
 import logo from "../assets/logo.PNG";
 import { Link } from "react-router-dom";
+import SearchBar from "./SearchBar";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -68,14 +69,9 @@ const Header: React.FC = () => {
           </Link>
         </div>
 
-        {/* Ô tìm kiếm */}
-        <div className="flex items-center border rounded-full px-4 py-2 w-1/2">
-          <Search className="text-gray-500" size={20} />
-          <input
-            type="text"
-            placeholder="Tìm kiếm"
-            className="w-full outline-none px-3 text-sm"
-          />
+        {/* Ô tìm kiếm - Thay thế bằng SearchBar component */}
+        <div className="w-1/2">
+          <SearchBar />
         </div>
 
         {/* Các icon */}

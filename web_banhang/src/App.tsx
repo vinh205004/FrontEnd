@@ -7,6 +7,7 @@ import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
 import CategoryPage from "./pages/CategoryPage";
 import NotFound from "./pages/NotFound";
+import SearchResultPage from "./pages/SearchResultPage";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/:category/:subcategory" element={<CategoryPage />} />
         <Route path="/:category" element={<CategoryPage />} />
+        <Route path="/search" element={<SearchResultPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </MainLayout>
