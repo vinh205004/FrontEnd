@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
+import { useNavigate } from "react-router-dom";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
@@ -18,7 +19,7 @@ import banner5 from "../../assets/banner5.webp";
 
 const Home: React.FC = () => {
   const slides = [banner1, banner2, banner3, banner4, banner5];
-
+  const navigate = useNavigate();
   const [vouchers, setVouchers] = useState<Voucher[]>([]);
   const [products, setProducts] = useState<ProductMock[]>([]);
   const [filter, setFilter] = useState<string>("Tất cả");
@@ -155,6 +156,7 @@ const Home: React.FC = () => {
                     price={p.price}
                     images={p.images}
                     badges={p.badges}
+                    onCardClick={() => navigate(`/product/${p.id}`)}
                     onAddToCart={() => {
                       /* placeholder: thêm xử lý khi cần */
                     }}

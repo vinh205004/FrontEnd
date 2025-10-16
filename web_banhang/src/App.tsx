@@ -8,10 +8,12 @@ import Register from "./pages/Auth/Register";
 import CategoryPage from "./pages/CategoryPage";
 import NotFound from "./pages/NotFound";
 import SearchResultPage from "./pages/SearchResultPage";
+import { AuthProvider } from "./pages/contexts/AuthContext";
 
 function App() {
   return (
-    <MainLayout>
+    <AuthProvider>
+      <MainLayout>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/product/:id" element={<Product />} />
@@ -21,9 +23,13 @@ function App() {
         <Route path="/:category/:subcategory" element={<CategoryPage />} />
         <Route path="/:category" element={<CategoryPage />} />
         <Route path="/search" element={<SearchResultPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </MainLayout>
+    </AuthProvider>
+    
   );
 }
 

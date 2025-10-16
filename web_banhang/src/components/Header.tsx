@@ -81,8 +81,10 @@ const Header: React.FC = () => {
             <span>Cửa hàng</span>
           </div>
           <div className="flex flex-col items-center cursor-pointer">
-            <User size={22} />
-            <span>Tài khoản</span>
+            <Link to="/login" className="flex flex-col items-center">
+              <User size={22} />
+              <span>Tài khoản</span>
+            </Link>
           </div>
           <div className="relative flex flex-col items-center cursor-pointer">
             <ShoppingBag size={22} />
