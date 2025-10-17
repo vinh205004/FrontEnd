@@ -4,11 +4,13 @@ import { ShoppingBag, User, Store, ChevronLeft, ChevronRight } from "lucide-reac
 import logo from "../assets/logo.PNG";
 import { Link } from "react-router-dom";
 import SearchBar from "./SearchBar";
+import { useAuth } from "../pages/contexts/AuthContext";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 const Header: React.FC = () => {
   const sliderRef = useRef<Slider | null>(null);
+  const { user, setIsAuthModalOpen } = useAuth();
 
   const messages = [
     "ĐỔI HÀNG MIỄN PHÍ - TẠI TẤT CẢ CỬA HÀNG TRONG 30 NGÀY",
@@ -80,19 +82,20 @@ const Header: React.FC = () => {
             <Store size={22} />
             <span>Cửa hàng</span>
           </div>
-          <div className="flex flex-col items-center cursor-pointer">
-            <Link to="/login" className="flex flex-col items-center">
-              <User size={22} />
-              <span>Tài khoản</span>
-            </Link>
+          <div 
+            className="flex flex-col items-center cursor-pointer"
+            onClick={() => setIsAuthModalOpen(true)}
+          >
+            <User size={22} />
+            <span>{user ? user.name : "Tài khoản"}</span>
           </div>
-          <div className="relative flex flex-col items-center cursor-pointer">
+          <Link to="/cart" className="relative flex flex-col items-center cursor-pointer">
             <ShoppingBag size={22} />
             <span>Giỏ hàng</span>
             <span className="absolute -top-1 right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
               1
             </span>
-          </div>
+          </Link>
         </div>
       </div>
     </header>

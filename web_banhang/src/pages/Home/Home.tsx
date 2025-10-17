@@ -107,7 +107,12 @@ const Home: React.FC = () => {
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-3xl font-extrabold text-[#274151]">SẢN PHẨM MỚI</h2>
           <div className="text-sm text-gray-600 flex items-center gap-4">
-            <button className="text-sm text-gray-500">XEM THÊM →</button>
+            <button 
+              onClick={() => navigate('/search')}
+              className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
+            >
+              XEM THÊM →
+            </button>
           </div>
         </div>
 
@@ -116,7 +121,7 @@ const Home: React.FC = () => {
             <button
               key={f}
               onClick={() => setFilter(f)}
-              className={`px-4 py-2 border rounded text-sm ${filter===f? 'bg-[#374151] text-white':''}`}
+              className={`px-4 py-2 border rounded text-sm ${filter===f ? 'bg-[#374151] text-white' : ''}`}
             >
               {f}
             </button>

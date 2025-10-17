@@ -4,8 +4,8 @@ import { useAuth } from "../contexts/AuthContext";
 const Register: React.FC = () => {
   const { register } = useAuth();
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState(""); // ✅ Thêm dòng này
   const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
 
@@ -17,7 +17,7 @@ const Register: React.FC = () => {
     }
 
     try {
-      register(username, email, password);
+      await register(username, email, password);
       alert("Đăng ký thành công!");
     } catch (err) {
       if (err instanceof Error) setError(err.message);
@@ -40,6 +40,14 @@ const Register: React.FC = () => {
           placeholder="Tên đăng nhập"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          className="w-full border p-2 mb-3 rounded"
+        />
+        {/* ✅ Thêm input email */}
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           className="w-full border p-2 mb-3 rounded"
         />
         <input

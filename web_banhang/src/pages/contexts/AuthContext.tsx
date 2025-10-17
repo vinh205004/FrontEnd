@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import type { ReactNode } from "react";
+import { loginUser, registerUser } from "../../services/authService";
 
 
 
@@ -10,8 +11,8 @@ interface User {
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => void;
-  register: (name: string, email: string, password: string) => void;
+  login: (email: string, password: string) => Promise<void>;
+  register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
   isAuthModalOpen: boolean;
   setIsAuthModalOpen: (open: boolean) => void;
@@ -23,16 +24,34 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
-  const login = (email: string, password: string) => {
-    console.log("Logging in:", email, password);
-    setUser({ name: "Người dùng", email });
-    setIsAuthModalOpen(false);
+  const login = async (email: string, password: string) => {
+    try {
+      const result = await loginUser(email, password);
+      if (result.success) {
+        setUser({ name: "Người dùng", email });
+        setIsAuthModalOpen(false);
+      } else {
+        throw new Error(result.message);
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      throw error;
+    }
   };
 
-  const register = (name: string, email: string, password: string) => {
-    console.log("Registering:", name, email, password);
-    setUser({ name, email });
-    setIsAuthModalOpen(false);
+  const register = async (name: string, email: string, password: string) => {
+    try {
+      const result = await registerUser(name, password);
+      if (result.success) {
+        setUser({ name, email });
+        setIsAuthModalOpen(false);
+      } else {
+        throw new Error(result.message);
+      }
+    } catch (error) {
+      console.error("Register error:", error);
+      throw error;
+    }
   };
 
   const logout = () => setUser(null);

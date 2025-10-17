@@ -5,6 +5,7 @@ import type { ProductMock } from "../services/mockProducts";
 import { getCategories } from "../services/categoryService";
 import type { Category } from "../services/categoryService";
 import ProductCard from "../components/ProductCard";
+import Pagination from "../components/Pagination";
 
 const CategoryPage: React.FC = () => {
   const { category, subcategory } = useParams<{ category: string; subcategory: string }>();
@@ -20,8 +21,7 @@ const CategoryPage: React.FC = () => {
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [totalProducts, setTotalProducts] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
-  const PRODUCTS_PER_PAGE = 12;
+  const PRODUCTS_PER_PAGE = 20;
 
   // Filters - Sync with URL params
   const [selectedSizes, setSelectedSizes] = useState<string[]>(() => {
@@ -85,7 +85,7 @@ const CategoryPage: React.FC = () => {
   }, [selectedSizes, sortBy, priceRange, setSearchParams]);
 
   // Load products
-  const loadProducts = useCallback(async (page: number = 1, append: boolean = false) => {
+  const loadProducts = useCallback(async (page: number = 1) => {
     if (!category || categories.length === 0) return;
 
     setIsLoading(true);
@@ -166,13 +166,7 @@ const CategoryPage: React.FC = () => {
       const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
 
       setTotalProducts(filteredProducts.length);
-      setHasMore(endIndex < filteredProducts.length);
-
-      if (append) {
-        setProducts(prev => [...prev, ...paginatedProducts]);
-      } else {
-        setProducts(paginatedProducts);
-      }
+      setProducts(paginatedProducts);
 
     } catch (err) {
       console.error("Error loading products:", err);
@@ -186,7 +180,7 @@ const CategoryPage: React.FC = () => {
   // Load products when dependencies change
   useEffect(() => {
     setCurrentPage(1);
-    loadProducts(1, false);
+    loadProducts(1);
   }, [loadProducts]);
 
   // Extract available sizes from current products
@@ -227,10 +221,10 @@ const CategoryPage: React.FC = () => {
     setCurrentPage(1); // Reset to first page
   };
 
-  const handleLoadMore = () => {
-    const nextPage = currentPage + 1;
-    setCurrentPage(nextPage);
-    loadProducts(nextPage, true);
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    loadProducts(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleCategoryClick = () => {
@@ -295,7 +289,7 @@ const CategoryPage: React.FC = () => {
           <h3 className="text-lg font-semibold text-red-800 mb-2">Có lỗi xảy ra</h3>
           <p className="text-red-600 mb-4">{error}</p>
           <button 
-            onClick={() => loadProducts(1, false)}
+            onClick={() => loadProducts(1)}
             className="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700 transition-colors"
           >
             Thử lại
@@ -525,21 +519,17 @@ const CategoryPage: React.FC = () => {
             </div>
           )}
 
-          {/* Load More */}
-          {hasMore && products.length > 0 && (
-            <div className="text-center mt-8">
-              <button 
-                onClick={handleLoadMore}
-                disabled={isLoading}
-                className="bg-gray-800 text-white px-8 py-3 rounded hover:bg-gray-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
-              >
-                {isLoading ? 'Đang tải...' : 'Xem thêm sản phẩm'}
-              </button>
-            </div>
+          {/* Pagination */}
+          {products.length > 0 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={Math.ceil(totalProducts / PRODUCTS_PER_PAGE)}
+              onPageChange={handlePageChange}
+            />
           )}
 
-          {/* Loading more indicator */}
-          {isLoading && products.length > 0 && (
+          {/* Loading indicator */}
+          {isLoading && (
             <div className="text-center mt-8">
               <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-800"></div>
             </div>

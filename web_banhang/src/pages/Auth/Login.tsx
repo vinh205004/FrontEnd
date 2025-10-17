@@ -3,14 +3,14 @@ import { useAuth } from "../contexts/AuthContext";
 
 const Login: React.FC = () => {
   const { login } = useAuth();
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await login(username, password);
+      await login(email, password);
       alert("Đăng nhập thành công!");
     } catch (err) {
       if (err instanceof Error) setError(err.message);
@@ -29,10 +29,10 @@ const Login: React.FC = () => {
         {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
 
         <input
-          type="text"
-          placeholder="Tên đăng nhập"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           className="w-full border p-2 mb-3 rounded"
         />
         <input
