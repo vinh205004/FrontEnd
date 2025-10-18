@@ -23,7 +23,7 @@ const CategoryPage: React.FC = () => {
   const [totalProducts, setTotalProducts] = useState(0);
   const PRODUCTS_PER_PAGE = 20;
 
-  // Filters - Sync with URL params
+  // lọc - đồng bộ với tham số URL
   const [selectedSizes, setSelectedSizes] = useState<string[]>(() => {
     const sizesParam = searchParams.get('sizes');
     return sizesParam ? sizesParam.split(',') : [];
@@ -40,10 +40,10 @@ const CategoryPage: React.FC = () => {
     max: 1000000
   });
 
-  // Dynamic sizes based on category
+  // kích cỡ - động dựa trên danh mục
   const [availableSizes, setAvailableSizes] = useState<string[]>([]);
 
-  // Load categories
+  // Tải danh mục
   useEffect(() => {
     const loadCategories = async () => {
       try {
@@ -57,14 +57,14 @@ const CategoryPage: React.FC = () => {
     loadCategories();
   }, []);
 
-  // Sync selectedSubCategory with URL parameter
+  // Đồng bộ selectedSubCategory với tham số URL
   useEffect(() => {
     setSelectedSubCategory(subcategory || null);
-    setCurrentPage(1); // Reset page when subcategory changes
+    setCurrentPage(1); // Reset trang khi danh mục con thay đổi
     window.scrollTo(0, 0);
   }, [subcategory]);
 
-  // Sync filters with URL params
+  // Đồng bộ lọc với tham số URL
   useEffect(() => {
     const params: Record<string, string> = {};
     
@@ -84,7 +84,7 @@ const CategoryPage: React.FC = () => {
     setSearchParams(params, { replace: true });
   }, [selectedSizes, sortBy, priceRange, setSearchParams]);
 
-  // Load products
+  // Tải sản phẩm
   const loadProducts = useCallback(async (page: number = 1) => {
     if (!category || categories.length === 0) return;
 
@@ -92,7 +92,7 @@ const CategoryPage: React.FC = () => {
     setError(null);
 
     try {
-      // Find the category name from slug
+      // Tìm tên danh mục từ slug
       const currentCategoryData = categories.find(cat => cat.slug === category);
       if (!currentCategoryData) {
         throw new Error("Danh mục không tồn tại");
@@ -101,44 +101,44 @@ const CategoryPage: React.FC = () => {
       const categoryName = currentCategoryData.name;
       let allProducts: ProductMock[];
       
-      // Check if selectedSubCategory exists in current category
+      // Kiểm tra nếu selectedSubCategory tồn tại trong danh mục hiện tại
       const subCategoryExists = currentCategoryData.subCategories.some(
         sub => sub.slug === selectedSubCategory
       );
       
       if (selectedSubCategory && subCategoryExists) {
-        // Load products by subcategory
+        // Tải sản phẩm theo danh mục con
         const allCategoryProducts = await getProductsByCategory(categoryName);
         allProducts = allCategoryProducts.filter(
           product => product.subCategory === selectedSubCategory
         );
         console.log(`Loading subcategory "${selectedSubCategory}":`, allProducts.length, 'products');
       } else {
-        // Load products by category
+        // Tải sản phẩm theo danh mục
         if (selectedSubCategory && !subCategoryExists) {
           setSelectedSubCategory(null);
         }
-        // TODO: Replace with actual API call that supports pagination
+        // TODO: Thay thế bằng API thực tế hỗ trợ phân trang
         // const response = await fetch(`/api/products?category=${categoryName}&page=${page}&limit=${PRODUCTS_PER_PAGE}`);
         allProducts = await getProductsByCategory(categoryName);
       }
 
-      // Apply filters (this should be done on backend in production)
+      // Áp dụng lọc (nên làm trên backend trong production)
       let filteredProducts = allProducts;
 
-      // Filter by size
+      // Lọc theo kích cỡ
       if (selectedSizes.length > 0) {
         filteredProducts = filteredProducts.filter(product => 
           product.sizes?.some(size => selectedSizes.includes(size))
         );
       }
 
-      // Filter by price range
+      // Lọc theo khoảng giá
       filteredProducts = filteredProducts.filter(product => 
         product.price >= priceRange.min && product.price <= priceRange.max
       );
 
-      // Sort products
+      // Sắp xếp sản phẩm
       switch (sortBy) {
         case 'price-asc':
           filteredProducts.sort((a, b) => a.price - b.price);
@@ -153,14 +153,14 @@ const CategoryPage: React.FC = () => {
           filteredProducts.sort((a, b) => b.title.localeCompare(a.title));
           break;
         case 'newest':
-          // Assuming products have a createdAt field
+          // Giả sử sản phẩm có trường createdAt
           // filteredProducts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
           break;
         default:
           break;
       }
 
-      // Pagination (client-side for now, should be server-side)
+      // Phân trang)
       const startIndex = (page - 1) * PRODUCTS_PER_PAGE;
       const endIndex = startIndex + PRODUCTS_PER_PAGE;
       const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
@@ -177,13 +177,13 @@ const CategoryPage: React.FC = () => {
     }
   }, [category, selectedSubCategory, categories, selectedSizes, sortBy, priceRange]);
 
-  // Load products when dependencies change
+  // Tải sản phẩm khi dependencies thay đổi
   useEffect(() => {
     setCurrentPage(1);
     loadProducts(1);
   }, [loadProducts]);
 
-  // Extract available sizes from current products
+  // Trích xuất kích cỡ có sẵn từ sản phẩm hiện tại
   useEffect(() => {
     const loadAvailableSizes = async () => {
       if (!category || categories.length === 0) return;
@@ -195,7 +195,7 @@ const CategoryPage: React.FC = () => {
         const categoryName = currentCategoryData.name;
         const allCategoryProducts = await getProductsByCategory(categoryName);
         
-        // Extract all unique sizes from category products
+        // Trích xuất tất cả kích cỡ khác nhau từ danh mục sản phẩm
         const allSizes = new Set<string>();
         allCategoryProducts.forEach(product => {
           product.sizes?.forEach(size => allSizes.add(size));
@@ -211,14 +211,14 @@ const CategoryPage: React.FC = () => {
     loadAvailableSizes();
   }, [category, categories]);
 
-  // Handlers
+  // Xử lý sự kiện
   const handleSizeToggle = (size: string) => {
     setSelectedSizes(prev => 
       prev.includes(size) 
         ? prev.filter(s => s !== size)
         : [...prev, size]
     );
-    setCurrentPage(1); // Reset to first page
+    setCurrentPage(1); // Reset trang đầu tiên
   };
 
   const handlePageChange = (page: number) => {
@@ -252,7 +252,7 @@ const CategoryPage: React.FC = () => {
 
   const currentCategory = categories.find(cat => cat.slug === category);
 
-  // Loading skeleton
+  // Skeleton loading
   if (isLoading && products.length === 0) {
     return (
       <div className="max-w-7xl mx-auto py-8 px-4">
@@ -278,7 +278,7 @@ const CategoryPage: React.FC = () => {
     );
   }
 
-  // Error state
+  // Trạng thái lỗi
   if (error && products.length === 0) {
     return (
       <div className="max-w-7xl mx-auto py-8 px-4">
@@ -304,7 +304,7 @@ const CategoryPage: React.FC = () => {
       <div className="flex gap-8">
         {/* Sidebar */}
         <div className="w-1/4 bg-white rounded-lg shadow-sm p-6 h-fit sticky top-4">
-          {/* Active filters count */}
+          {/* Số lượng bộ lọc đang áp dụng */}
           {(selectedSizes.length > 0 || sortBy !== 'default' || priceRange.min > 0 || priceRange.max < 1000000) && (
             <div className="mb-4 flex items-center justify-between bg-blue-50 p-3 rounded">
               <span className="text-sm text-blue-800">
@@ -319,7 +319,7 @@ const CategoryPage: React.FC = () => {
             </div>
           )}
 
-          {/* Danh mục sản phẩm */}
+          {/* Danh mục con sản phẩm */}
           <div className="mb-8">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-gray-800">Danh mục sản phẩm</h3>
@@ -419,7 +419,7 @@ const CategoryPage: React.FC = () => {
               </svg>
             </div>
             
-            {/* Price inputs */}
+            {/* Các input giá */}
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <input
@@ -439,7 +439,7 @@ const CategoryPage: React.FC = () => {
                 />
               </div>
 
-              {/* Price range slider */}
+              {/* Thanh trượt khoảng giá */}
               <div className="px-1">
                 <input
                   type="range"
@@ -456,7 +456,7 @@ const CategoryPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Apply button */}
+              {/* Nút áp dụng */}
               <button
                 onClick={handleApplyPriceFilter}
                 className="w-full bg-gray-800 text-white py-2 text-sm rounded hover:bg-gray-700 transition-colors"
@@ -481,7 +481,7 @@ const CategoryPage: React.FC = () => {
             </p>
           </div>
 
-          {/* No products found */}
+          {/* Không tìm thấy sản phẩm */}
           {!isLoading && products.length === 0 && (
             <div className="text-center py-12">
               <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -498,7 +498,7 @@ const CategoryPage: React.FC = () => {
             </div>
           )}
 
-          {/* Product Grid */}
+          {/* Grid sản phẩm */}
           {products.length > 0 && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {products.map((product) => (
@@ -510,16 +510,16 @@ const CategoryPage: React.FC = () => {
                   badges={product.badges}
                   onCardClick={() => navigate(`/product/${product.id}`)}
                   onAddToCart={() => {
-                    // TODO: Implement add to cart logic
+                    // TODO: Thực hiện logic thêm vào giỏ hàng
                     console.log('Add to cart:', product.id);
-                    // Example: addToCart(product.id);
+                    
                   }}
                 />
               ))}
             </div>
           )}
 
-          {/* Pagination */}
+          {/* Phân trang */}
           {products.length > 0 && (
             <Pagination
               currentPage={currentPage}
@@ -528,7 +528,7 @@ const CategoryPage: React.FC = () => {
             />
           )}
 
-          {/* Loading indicator */}
+          {/* Chỉ thị loading */}
           {isLoading && (
             <div className="text-center mt-8">
               <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-800"></div>

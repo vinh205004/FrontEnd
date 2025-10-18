@@ -20,7 +20,7 @@ const SearchResultPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
   
-  // Filters
+  // lọc
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<string>("default");
@@ -29,7 +29,7 @@ const SearchResultPage: React.FC = () => {
     max: 1000000
   });
 
-  // Load all products
+  // Tải tất cả sản phẩm
   useEffect(() => {
     const loadProducts = async () => {
       setIsLoading(true);
@@ -45,16 +45,16 @@ const SearchResultPage: React.FC = () => {
     loadProducts();
   }, []);
 
-  // Reset pagination when filters change
+  // Reset phân trang khi lọc thay đổi
   useEffect(() => {
     setCurrentPage(1);
   }, [query, selectedCategories, selectedSizes, sortBy, priceRange]);
 
-  // Filter and search products
+  // Lọc và tìm kiếm sản phẩm
   useEffect(() => {
     let results = products;
 
-    // Apply search filter if query exists
+    // Áp dụng lọc tìm kiếm nếu query tồn tại
     if (query) {
       results = results.filter(product => {
         const searchLower = query.toLowerCase();
@@ -66,26 +66,26 @@ const SearchResultPage: React.FC = () => {
       });
     }
 
-    // Apply category filter
+    // Áp dụng lọc danh mục
     if (selectedCategories.length > 0) {
       results = results.filter(product => 
         product.category && selectedCategories.includes(product.category)
       );
     }
 
-    // Apply size filter
+    // Áp dụng lọc kích cỡ
     if (selectedSizes.length > 0) {
       results = results.filter(product => 
         product.sizes?.some(size => selectedSizes.includes(size))
       );
     }
 
-    // Apply price filter
+    // Áp dụng lọc khoảng giá
     results = results.filter(product => 
       product.price >= priceRange.min && product.price <= priceRange.max
     );
 
-    // Apply sorting
+    // Áp dụng sắp xếp
     switch (sortBy) {
       case "price-asc":
         results.sort((a, b) => a.price - b.price);
@@ -106,10 +106,10 @@ const SearchResultPage: React.FC = () => {
     setFilteredProducts(results);
   }, [query, products, selectedCategories, selectedSizes, sortBy, priceRange]);
 
-  // Get unique categories
+  // Trích xuất danh mục khác nhau
   const categories = Array.from(new Set(products.map(p => p.category).filter(Boolean)));
   
-  // Get available sizes
+  // Trích xuất kích cỡ có sẵn
   const availableSizes = Array.from(
     new Set(products.flatMap(p => p.sizes || []))
   ).sort();
@@ -154,12 +154,13 @@ const SearchResultPage: React.FC = () => {
     return new Intl.NumberFormat('vi-VN').format(price);
   };
 
-  // Pagination logic
+  // Logic phân trang
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentProducts = filteredProducts.slice(startIndex, endIndex);
 
+  // Xử lý sự kiện phân trang
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -197,12 +198,12 @@ const SearchResultPage: React.FC = () => {
         </form>
       </div>
 
-      {/* No search query - Show all products */}
+      {/* Không có query tìm kiếm - Hiển thị tất cả sản phẩm */}
       {!query && (
         <div className="flex gap-8">
           {/* Sidebar filters */}
           <div className="w-1/4 bg-white rounded-lg shadow-sm p-6 h-fit sticky top-4">
-            {/* Active filters */}
+            {/* Bộ lọc đang áp dụng */}
             {(selectedCategories.length > 0 || selectedSizes.length > 0 || sortBy !== 'default') && (
               <div className="mb-4 flex items-center justify-between bg-blue-50 p-3 rounded">
                 <span className="text-sm text-blue-800">
@@ -217,7 +218,7 @@ const SearchResultPage: React.FC = () => {
               </div>
             )}
 
-            {/* Categories */}
+            {/* Danh mục */}
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-gray-800 mb-3">Danh mục</h3>
               <div className="space-y-2">
@@ -235,7 +236,7 @@ const SearchResultPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Sort */}
+            {/* Sắp xếp */}
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-gray-800 mb-3">Sắp xếp</h3>
               <select 
@@ -251,7 +252,7 @@ const SearchResultPage: React.FC = () => {
               </select>
             </div>
 
-            {/* Sizes */}
+            {/* Kích cỡ */}
             {availableSizes.length > 0 && (
               <div className="mb-6">
                 <h3 className="text-lg font-semibold text-gray-800 mb-3">Kích cỡ</h3>
@@ -322,7 +323,7 @@ const SearchResultPage: React.FC = () => {
               </div>
             )}
 
-            {/* Products grid */}
+            {/* Grid sản phẩm */}
             {!isLoading && currentProducts.length > 0 && (
               <>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -376,9 +377,9 @@ const SearchResultPage: React.FC = () => {
       {/* Search kết quả */}
       {query && (
         <div className="flex gap-8">
-          {/* Sidebar filters */}
+          {/* Sidebar lọc */}
           <div className="w-1/4 bg-white rounded-lg shadow-sm p-6 h-fit sticky top-4">
-            {/* Active filters */}
+            {/* Bộ lọc đang áp dụng */}
             {(selectedCategories.length > 0 || selectedSizes.length > 0 || sortBy !== 'default') && (
               <div className="mb-4 flex items-center justify-between bg-blue-50 p-3 rounded">
                 <span className="text-sm text-blue-800">
@@ -393,7 +394,7 @@ const SearchResultPage: React.FC = () => {
               </div>
             )}
 
-            {/* Categories */}
+            {/* Danh mục */}
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-gray-800 mb-3">Danh mục</h3>
               <div className="space-y-2">
@@ -411,7 +412,7 @@ const SearchResultPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Sort */}
+            {/* Sắp xếp */}
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-gray-800 mb-3">Sắp xếp</h3>
               <select 

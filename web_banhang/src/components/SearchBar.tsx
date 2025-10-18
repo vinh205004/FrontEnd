@@ -12,12 +12,12 @@ const SearchBar: React.FC = () => {
   const [allProducts, setAllProducts] = useState<ProductMock[]>([]);
   const searchRef = useRef<HTMLDivElement>(null);
 
-  // Load all products on mount
+  // Tải tất cả sản phẩm khi mount
   useEffect(() => {
     getAllProducts().then(setAllProducts);
   }, []);
 
-  // Close suggestions when clicking outside
+  // Đóng gợi ý khi click ngoài
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
@@ -29,7 +29,7 @@ const SearchBar: React.FC = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Update suggestions when search query changes
+  // Cập nhật gợi ý khi query tìm kiếm thay đổi
   useEffect(() => {
     if (searchQuery.trim().length < 2) {
       setSuggestions([]);
@@ -45,7 +45,7 @@ const SearchBar: React.FC = () => {
           product.subCategory?.toLowerCase().includes(query)
         );
       })
-      .slice(0, 5); // Limit to 5 suggestions
+      .slice(0, 5); // Giới hạn 5 gợi ý
 
     setSuggestions(filtered);
   }, [searchQuery, allProducts]);
@@ -55,7 +55,7 @@ const SearchBar: React.FC = () => {
     if (searchQuery.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
       setShowSuggestions(false);
-      setSearchQuery(""); // Clear after search
+      setSearchQuery(""); // Xóa sau khi tìm kiếm
     }
   };
 
@@ -100,7 +100,7 @@ const SearchBar: React.FC = () => {
         </div>
       </form>
 
-      {/* Suggestions dropdown */}
+      {/* Dropdown gợi ý */}
       {showSuggestions && searchQuery.trim().length >= 2 && (
         <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto">
           {suggestions.length > 0 ? (

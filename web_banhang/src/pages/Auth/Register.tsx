@@ -4,7 +4,7 @@ import { useAuth } from "../contexts/AuthContext";
 const Register: React.FC = () => {
   const { register } = useAuth();
   const [username, setUsername] = useState("");
-  const [email, setEmail] = useState(""); // ✅ Thêm dòng này
+  const [email, setEmail] = useState(""); 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -42,7 +42,7 @@ const Register: React.FC = () => {
           onChange={(e) => setUsername(e.target.value)}
           className="w-full border p-2 mb-3 rounded"
         />
-        {/* ✅ Thêm input email */}
+        
         <input
           type="email"
           placeholder="Email"

@@ -20,16 +20,16 @@ const Pagination: React.FC<PaginationProps> = ({
 
   const pages = [];
   
-  // Calculate start and end page numbers
+  // Tính toán trang bắt đầu và trang kết thúc
   let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
   const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
   
-  // Adjust start page if we're near the end
+  // Điều chỉnh trang bắt đầu nếu gần cuối
   if (endPage - startPage + 1 < maxVisiblePages) {
     startPage = Math.max(1, endPage - maxVisiblePages + 1);
   }
 
-  // Previous button
+  // Nút trước
   pages.push(
     <button
       key="prev"
@@ -46,7 +46,7 @@ const Pagination: React.FC<PaginationProps> = ({
     </button>
   );
 
-  // Page numbers
+  // Số trang
   for (let i = startPage; i <= endPage; i++) {
     pages.push(
       <button
@@ -64,7 +64,7 @@ const Pagination: React.FC<PaginationProps> = ({
     );
   }
 
-  // Next button
+  // Nút tiếp
   pages.push(
     <button
       key="next"

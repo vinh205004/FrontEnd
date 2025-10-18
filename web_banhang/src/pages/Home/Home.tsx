@@ -129,7 +129,7 @@ const Home: React.FC = () => {
         </div>
 
         <div className="relative">
-          {/* custom navigation buttons */}
+          {/* nút điều khiển tùy chỉnh */}
           <button className="custom-prev absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white/90 rounded shadow flex items-center justify-center border">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M15 6L9 12L15 18" stroke="#374151" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -163,7 +163,7 @@ const Home: React.FC = () => {
                     badges={p.badges}
                     onCardClick={() => navigate(`/product/${p.id}`)}
                     onAddToCart={() => {
-                      /* placeholder: thêm xử lý khi cần */
+                      /* placeholder: thêm xử lý khi cần thiết */
                     }}
                   />
                 </SwiperSlide>

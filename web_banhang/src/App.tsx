@@ -37,7 +37,7 @@ function App() {
           
           <Footer />
           
-          {/* Auth Modal - Render globally */}
+          {/* Modal đăng nhập/đăng ký */}
           <AuthModal />
         </div>
       
